@@ -104,3 +104,8 @@ ENV/
 # IDE settings
 .vscode/
 .idea/
+
+# playground (for experinmenting & testing)
+playground/
+playground.py
+playground.ipynb
