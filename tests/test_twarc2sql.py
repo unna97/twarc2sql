@@ -3,8 +3,8 @@
 """Tests for `twarc2sql` package."""
 
 import pytest
-
-
+import pandas as pd
+import json
 from twarc2sql import twarc2sql
 
 
@@ -16,9 +16,14 @@ def response():
     """
     # import requests
     # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+    # read the jsonl file and return the first line:
+    tweets = pd.read_json('./tests/data/example.jsonl', lines=True)
+    return tweets
 
 
 def test_content(response):
     """Sample pytest test function with the pytest fixture as an argument."""
     # from bs4 import BeautifulSoup
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
+    print(type(response))
+    assert type(response) == pd.core.frame.DataFrame
