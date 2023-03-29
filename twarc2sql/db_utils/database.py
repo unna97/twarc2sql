@@ -64,7 +64,7 @@ def create_engine(uri:str) -> sa.engine.base.Engine:
     return sa.create_engine(uri, echo=True)
 
 
-def load_db_config(file_path:Optional[str]=None) -> Dict[Any]:
+def load_db_config(file_path:Optional[str]=None) -> Dict[str, str]:
     """
     Load environment variables from file_path and return a dictionary of the database variables
 
@@ -93,7 +93,7 @@ def load_db_config(file_path:Optional[str]=None) -> Dict[Any]:
     for var in db_vars:
         assert os.getenv(var) is not None, f"{var} is not set in {file_path}"
     
-    db_variables: Dict[Any] = {var: os.getenv(var) for var in db_vars}
+    db_variables: Dict[str, str] = {var: os.getenv(var) for var in db_vars}
     logging.info("Loaded environment variables")
     return db_variables
 
