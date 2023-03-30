@@ -27,3 +27,8 @@ def test_content(response):
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
     print(type(response))
     assert type(response) == pd.core.frame.DataFrame
+
+
+def test_example():
+    from twarc2sql.db_utils import db_access
+    assert db_access.create_uri('test', 'test', 'test', 'test', 'test') == 'postgresql://test:test@test:test/test'
