@@ -202,7 +202,8 @@ def create_tables(engine:sa.engine, base: Any) -> None:
     ------------------
     None
     """
-    logging.info("Creating tables for database")
+    tables_created:List[str] = [table for table in base.metadata.tables.keys()]
+    logging.info(f"Creating tables {tables_created} for database")
     base.metadata.create_all(engine)
     logging.info("Successfully created tables for database")
 

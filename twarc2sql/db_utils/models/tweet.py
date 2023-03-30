@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, Boolean, DateTime
-from . import Base
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
+Base = declarative_base()
 
 class Tweet(Base):
     __tablename__ = "tweet"
