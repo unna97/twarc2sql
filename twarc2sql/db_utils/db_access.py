@@ -1,3 +1,9 @@
+"""
+This should appear in the docstring for the module
+"""
+
+
+
 import pandas as pd
 import numpy as np
 import os
@@ -13,7 +19,9 @@ logging.basicConfig(level=logging.INFO)
 
 
 class DatabaseException(Exception):
+    
     def __init__(self, message:str):
+
         self.message = message
 
 
@@ -229,4 +237,5 @@ def create_db_with_tables(db_name:Optional[str]=None):
     
     create_tables(engine, Base)
     return engine
+
 
