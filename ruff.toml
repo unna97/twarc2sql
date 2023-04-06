@@ -15,6 +15,7 @@ target-version = "py38"
 "setup.py" = ["I"]
 "examples/*.py" = ["I"]
 "doc/*.py" = ["I"]
+"twarc2sql/db_utils/models/*.py" = ["I","D"]
 
 [pydocstyle]
 convention = "numpy"
