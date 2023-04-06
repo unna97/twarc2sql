@@ -1,0 +1,20 @@
+select = [
+    "I",       # isort
+    "UP",      # pyupgrade
+    "D",       # pydocstyle
+    "E",       # pycodestyle
+    "F",       # pyflakes
+  ]
+
+target-version = "py38"
+
+
+
+[per-file-ignores]
+"__init__.py" = ["I", "E402"]
+"setup.py" = ["I"]
+"examples/*.py" = ["I"]
+"doc/*.py" = ["I"]
+
+[pydocstyle]
+convention = "numpy"
