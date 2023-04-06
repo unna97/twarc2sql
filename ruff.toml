@@ -11,11 +11,11 @@ target-version = "py38"
 
 
 [per-file-ignores]
-"__init__.py" = ["I", "E402"]
-"setup.py" = ["I"]
+"__init__.py" = ["I", "E402"] # ignore import order for __init__.py 
+"setup.py" = ["I", "E501"] # ignore line length for setup.py
 "examples/*.py" = ["I"]
 "doc/*.py" = ["I"]
-"twarc2sql/db_utils/models/*.py" = ["I","D"]
+"twarc2sql/db_utils/models/*.py" = ["I","D"] # ignore pydocstyle for models
 
 [pydocstyle]
 convention = "numpy"
