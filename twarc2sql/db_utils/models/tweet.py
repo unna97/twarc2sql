@@ -61,3 +61,5 @@ class Author(Base):
     username = Column(Text, doc="The username of the author")
     created_at = Column(DateTime, doc="The date and time when the author was created")
     description = Column(Text, nullable=True, doc="The description of the author")
+    location = Column(Text, nullable=True, doc="The location of the author")
+    verified = Column(Boolean, doc="Whether the author is verified")
