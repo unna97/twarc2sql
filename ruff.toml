@@ -15,7 +15,7 @@ target-version = "py38"
 "setup.py" = ["I", "E501"] # ignore line length for setup.py
 "examples/*.py" = ["I"]
 "doc/*.py" = ["I"]
-"twarc2sql/db_utils/models/*.py" = ["I","D"] # ignore pydocstyle for models
+"twarc2sql/db_utils/models.py" = ["I","D"] # ignore pydocstyle for models
 
 [pydocstyle]
 convention = "numpy"
