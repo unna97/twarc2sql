@@ -29,6 +29,7 @@ def test_content(response):
 
 
 def test_example():
+    """Sample pytest test function with twarc2sql code."""
     from twarc2sql.db_utils import db_access
 
     assert (
