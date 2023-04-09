@@ -2,10 +2,9 @@
 
 """Tests for `twarc2sql` package."""
 
-import pytest
+
 import pandas as pd
-import json
-from twarc2sql import twarc2sql
+import pytest
 
 
 @pytest.fixture
@@ -17,7 +16,7 @@ def response():
     # import requests
     # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
     # read the jsonl file and return the first line:
-    tweets = pd.read_json('./tests/data/example.jsonl', lines=True)
+    tweets = pd.read_json("./tests/data/example.jsonl", lines=True)
     return tweets
 
 
@@ -31,4 +30,8 @@ def test_content(response):
 
 def test_example():
     from twarc2sql.db_utils import db_access
-    assert db_access.create_uri('test', 'test', 'test', 'test', 'test') == 'postgresql://test:test@test:test/test'
+
+    assert (
+        db_access.create_uri("test", "test", "test", "test", "test")
+        == "postgresql://test:test@test:test/test"
+    )
