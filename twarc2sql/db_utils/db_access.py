@@ -1,21 +1,29 @@
 """
+Module for accessing the database.
+
+Module contains functions for creating and deleting databases & their 
+tables as defined in models.py.
 
 """
-import os
-import sqlalchemy as sa
-import dotenv
-import sqlalchemy_utils as sau
 import logging
-from typing import Optional, Dict, List, Any
+import os
+from typing import Any, Dict, List, Optional
+
+import dotenv
+import sqlalchemy as sa
+import sqlalchemy_utils as sau
+
 from .models import Base
 
 logging.basicConfig(level=logging.INFO)
 
 
 class DatabaseException(Exception):
+    """Exception for database errors."""
+
     def __init__(self, message: str):
         """
-        Exception for database errors
+        Exception for database errors.
 
         Parameters
         ----------
@@ -27,7 +35,6 @@ class DatabaseException(Exception):
         message : str
             The error message
         """
-
         self.message = message
 
 
@@ -35,7 +42,7 @@ def create_uri(
     db_name: str, db_user: str, db_password: str, db_host: str, db_port: str
 ) -> str:
     """
-    Create a URI for a database connection using the specified parameters
+    Create a URI for a database connection using the specified parameters.
 
     Parameters
     ----------
@@ -62,7 +69,7 @@ def create_uri(
 
 def create_engine(uri: str) -> sa.engine.base.Engine:
     """
-    Create a SQLAlchemy engine for the database specified by the URI
+    Create a SQLAlchemy engine for the database specified by the URI.
 
     Parameters
     ----------
@@ -83,12 +90,13 @@ def create_engine(uri: str) -> sa.engine.base.Engine:
 
 def load_db_config(file_path: Optional[str] = None) -> Dict[str, str]:
     """
-    Load environment variables from file_path and return a dictionary of the database variables
+    Load env variables from file_path and return a dictionary of the database variables.
 
     Parameters
     ----------
     file_path : Optional[str], optional
-        Path to the .env file. If None, defaults to .env in the current directory, by default None
+        Path to the .env file. If None, defaults to .env in the current directory,
+        by default None
 
     Returns
     -------
@@ -101,7 +109,6 @@ def load_db_config(file_path: Optional[str] = None) -> Dict[str, str]:
         if the environment file specified does not exist
         or if the environment variables are not set
     """
-
     if file_path is None:
         file_path = ".env"
 
@@ -121,12 +128,13 @@ def load_db_config(file_path: Optional[str] = None) -> Dict[str, str]:
 
 def create_db(db_name: Optional[str] = None) -> sa.engine.base.Engine:
     """
-    Create a database if it does not already exist with the specified name
+    Create a database if it does not already exist with the specified name.
 
     Parameters
     ----------
     db_name : Optional[str], optional
-        Name of the database to create if None it defaults to database enviroment file, by default None
+        Name of the database to create if None it defaults to database enviroment file,
+        by default None
 
     Returns
     -------
@@ -140,7 +148,6 @@ def create_db(db_name: Optional[str] = None) -> sa.engine.base.Engine:
     sa.exc.OperationalError
         if the database could not be created
     """
-
     db_vars = load_db_config()
     logging.info(f"Creating {db_vars['DB_NAME']} database")
 
@@ -178,23 +185,26 @@ def create_db(db_name: Optional[str] = None) -> sa.engine.base.Engine:
 # TODO: Throw an exception if the database does not exist?
 def delete_db(db_name: Optional[str] = None) -> bool:
     """
-    Delete a database if it exists with the specified name or do nothing if it does not exist
+    Delete a database.
+
+    if it exists with the specified name or do nothing if it does not exist.
 
     Note
     ----
-    This is not a guarantee that the database was deleted. The database may not exist in the first place.
+    This is not a guarantee that the database was deleted.
+    The database may not exist in the first place.
 
     Parameters
     ----------
     db_name : Optional[str], optional
-         Name of the database to delete. If None, defaults to the database specified in the environment file, by default None
+         Name of the database to delete. If None, defaults to the
+         database specified in the environment file, by default None
 
     Returns
     -------
     db_does_not_exist : bool
         True if the database does not exist, False otherwise
     """
-
     db_vars: Dict[Any] = load_db_config()
 
     if db_name is not None:
@@ -225,7 +235,7 @@ def delete_db(db_name: Optional[str] = None) -> bool:
 
 def create_tables(engine: sa.engine, base: Any) -> None:
     """
-    Create the tables for the database
+    Create the tables for the database.
 
     Parameters
     ----------
@@ -247,7 +257,7 @@ def create_tables(engine: sa.engine, base: Any) -> None:
 
 def create_db_with_tables(db_name: Optional[str] = None):
     """
-    Create a database and create the tables for the database
+    Create a database and create the tables for the database.
 
     This is a wrapper function for create_db and create_tables functions
 
@@ -261,7 +271,6 @@ def create_db_with_tables(db_name: Optional[str] = None):
     engine : sa.engine.base.Engine
         SQLAlchemy engine for the database created
     """
-
     if db_name is None:
         db_name = load_db_config()["DB_NAME"]
 

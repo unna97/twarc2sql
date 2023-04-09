@@ -1,6 +1,6 @@
-* twarc2sql version:
-* Python version:
-* Operating System:
+-   twarc2sql version:
+-   Python version:
+-   Operating System:
 
 ### Description
 

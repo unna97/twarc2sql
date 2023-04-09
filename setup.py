@@ -12,6 +12,11 @@ with open("HISTORY.rst") as history_file:
 
 requirements = []
 
+for line in open("requirements.txt"):
+    if line.strip() and not line.startswith("#"):
+        requirements.append(line.strip())
+
+
 test_requirements = [
     "pytest>=3",
 ]
@@ -43,4 +48,8 @@ setup(
     url="https://github.com/unna97/twarc2sql",
     version="0.1.0",
     zip_safe=False,
+    extras_require={
+        "dev": [],  # add dev requirements here and run `pip install -e .[dev]`
+        "test": ["pytest"],
+    },
 )
