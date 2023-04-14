@@ -39,7 +39,7 @@ def test_load_db_config():
     """
     config: Dict[str, str] = {
         "DB_NAME": "test_db",
-        "DB_USER": "postgres",
+        "DB_USER": "random_user",
         "DB_PASSWORD": "postgres",
         "DB_HOST": "localhost",
         "DB_PORT": "5432",
