@@ -19,7 +19,7 @@ def parse_requirements(filename):
 
 requirements_folder = "requirements"
 
-install_requires = parse_requirements(f"{requirements_folder}/requirements.txt")
+install_requires = parse_requirements(f"{requirements_folder}/default.txt")
 files = ["dev", "docs", "default"]
 extras_require = {
     file: parse_requirements(f"{requirements_folder}/{file}.txt") for file in files
