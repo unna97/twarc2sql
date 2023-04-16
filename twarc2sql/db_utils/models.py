@@ -42,7 +42,29 @@ class Tweet(Base):
         nullable=True,
         doc="The user id of the user the tweet is replying to",
     )
-    tweet_type = Column(Integer)
+
+    tweet_type = Column(
+        Integer,
+        doc="""
+        The type of the tweet 
+        0: original, 
+        1: quote tweet, 
+        2: retweeted tweet, 
+        3: reply, 
+        4: quoted tweet + replied to tweet
+        """,
+    )
+
+    retweet_count = Column(Integer, doc="The number of times the tweet was retweeted")
+    reply_count = Column(Integer, doc="The number of times the tweet was replied to")
+    like_count = Column(Integer, doc="The number of times the tweet was liked")
+    quote_count = Column(Integer, doc="The number of times the tweet was quoted")
+    impression_count = Column(Integer, doc="The number of times the tweet was viewed")
+    edits_remaining = Column(Integer, doc="The number of times the tweet can be edited")
+    is_edit_eligible = Column(Boolean, doc="Whether the tweet can be edited")
+    editable_until = Column(
+        DateTime, doc="The date and time when the tweet can no longer be edited"
+    )
 
     author = relationship("Author", back_populates="tweets")
 
@@ -63,3 +85,14 @@ class Author(Base):
     description = Column(Text, nullable=True, doc="The description of the author")
     location = Column(Text, nullable=True, doc="The location of the author")
     verified = Column(Boolean, doc="Whether the author is verified")
+    protected = Column(Boolean, doc="Whether the author is protected")
+    url = Column(Text, nullable=True, doc="The url of the author")
+    profile_image_url = Column(
+        Text, nullable=True, doc="The profile image url of the author"
+    )
+    followers_count = Column(Integer, doc="The number of followers of the author")
+    following_count = Column(
+        Integer, doc="The number of accounts the author is following"
+    )
+    tweet_count = Column(Integer, doc="The number of tweets of the author")
+    listed_count = Column(Integer, doc="The number of lists the author is in")

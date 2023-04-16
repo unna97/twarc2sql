@@ -274,3 +274,41 @@ def create_db_with_tables(
     create_tables(engine, Base)
     logging.info("Successfully created database and tables")
     return engine
+
+
+def get_engine(config_file_path: Optional[str] = None) -> sa.engine.base.Engine:
+    """
+    Get the SQLAlchemy engine for the database.
+
+    Parameters
+    ----------
+    config_file_path : Optional[str], optional
+        Path to the .env  or equivalent file. If None, defaults to .env in
+        the current directory.
+
+    Returns
+    -------
+    engine : sa.engine.base.Engine
+        SQLAlchemy engine for the database
+
+    Raises
+    ------
+    DatabaseException
+        if the database does not exist
+    """
+    db_vars = load_db_config(config_file_path)
+    logging.info(f"Getting engine for {db_vars['DB_NAME']} database")
+    uri = create_uri(
+        db_name=db_vars["DB_NAME"],
+        db_user=db_vars["DB_USER"],
+        db_password=db_vars["DB_PASSWORD"],
+        db_host=db_vars["DB_HOST"],
+        db_port=db_vars["DB_PORT"],
+    )
+    engine = create_engine(uri)
+    logging.info(f"Successfully got engine for {db_vars['DB_NAME']} database")
+    # check if the database exists:
+    if not sau.database_exists(uri):
+        logging.error(f"{db_vars['DB_NAME']} database does not exist")
+        raise DatabaseException(f"{db_vars['DB_NAME']} database does not exist")
+    return engine
