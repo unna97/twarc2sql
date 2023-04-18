@@ -1,3 +1,5 @@
+include MANIFEST.in
+include setup.py
 include AUTHORS.rst
 include CONTRIBUTING.rst
 include HISTORY.rst
@@ -8,4 +10,5 @@ recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
-recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif requirements/*.txt
+recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif 
+recursive-include requirements *.txt
