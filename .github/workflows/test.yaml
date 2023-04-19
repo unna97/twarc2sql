@@ -12,18 +12,25 @@ jobs:
             matrix:
                 os: [ubuntu-latest, windows-latest, macos-latest]
                 python-version: ["3.9", "3.10", "3.11"]
-        services:
-            postgres:
-                image: postgres:latest
-                env:
-                    POSTGRES_USER: random_user
-                    POSTGRES_PASSWORD: postgres
-                    POSTGRES_DB: test_db
-                ports: ["5432:5432"]
-                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        # services:
+        #     postgres:
+        #         image: postgres:latest
+        #         env:
+        #             POSTGRES_USER: random_user
+        #             POSTGRES_PASSWORD: postgres
+        #             POSTGRES_DB: test_db
+        #         ports: ["5432:5432"]
+        #         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
         steps:
             - uses: actions/checkout@v2
+            - name: setup postgres service
+              uses: ikalnytskyi/action-setup-postgres@v4
+              with:
+                  username: random_user
+                  password: postgres
+                  database: test_db
+                  port: 5432
             - name: Set up Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
               with:
