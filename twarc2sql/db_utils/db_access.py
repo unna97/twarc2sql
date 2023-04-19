@@ -270,7 +270,11 @@ def create_db_with_tables(
         SQLAlchemy engine for the database created
     """
     logging.info("Creating database and tables")
-    engine = create_db(config_file_path)
+    try:
+        engine = create_db(config_file_path)
+    except DatabaseException:
+        logging.info("Database already exists. Creating tables")
+        engine = get_engine(config_file_path)
     create_tables(engine, Base)
     logging.info("Successfully created database and tables")
     return engine
