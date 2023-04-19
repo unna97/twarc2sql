@@ -13,6 +13,8 @@ import os
 from typing import Dict
 
 import pytest
+import sqlalchemy as sa
+import sqlalchemy_utils as sau
 
 from twarc2sql.db_utils import db_access
 
@@ -64,3 +66,21 @@ def test_load_db_config_missing_file():
     # TODO:remove optional allowance of file_path = None
     # with pytest.raises(AssertionError):
     #     db_access.load_db_config()
+
+
+def test_create_db(config_file_path):
+    """
+    Test that the create_engine function returns an engine.
+
+    The engine should be a sqlalchemy.engine.base.Engine object.
+    """
+    assert db_access.delete_db(config_file_path)
+    engine = db_access.create_db(config_file_path)
+    assert sau.database_exists(engine.url)
+    # check that the database exists without tables:
+    assert isinstance(engine, sa.engine.base.Engine)
+    with pytest.raises(db_access.DatabaseException, match="database already exists"):
+        db_access.create_db(config_file_path)
+    assert db_access.delete_db(config_file_path)
+    # check that the database does not exist:
+    engine.dispose()
