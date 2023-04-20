@@ -19,7 +19,7 @@ import sqlalchemy_utils as sau
 from twarc2sql.db_utils import db_access
 
 
-def test_create_uri():
+def test_create_uri(uri):
     """
     Test that the create_uri function returns the correct URI.
 
@@ -68,6 +68,17 @@ def test_load_db_config_missing_file():
     #     db_access.load_db_config()
 
 
+def test_create_engine(config_file_path, uri):
+    """
+    Test that the create_engine function returns an engine.
+
+    The engine should be a sqlalchemy.engine.base.Engine object.
+    """
+    engine = db_access.create_engine(uri)
+    assert isinstance(engine, sa.engine.base.Engine)
+    engine.dispose()
+
+
 def test_delete_db(config_file_path):
     """
     Test that the delete_db function returns True.
@@ -93,3 +104,26 @@ def test_create_db(config_file_path):
     assert db_access.delete_db(config_file_path)
     # check that the database does not exist:
     engine.dispose()
+
+
+def test_create_tables(engine, base_tables, tables_and_columns):
+    """
+    Test that the create_tables function returns True.
+
+    The function should return True if the tables are created.
+    """
+    # create the tables:
+    db_access.create_tables(engine=engine, base=base_tables)
+    # check that the tables exist:
+    assert sau.database_exists(engine.url)
+    # check that the tables exist:
+    # Use pandas to check that the tables exist:
+    import pandas as pd
+
+    conn = engine.connect()
+
+    for table in tables_and_columns.keys():
+        df = pd.read_sql_table(table, conn)
+        assert set(df.columns.tolist()) == set(tables_and_columns[table])
+        assert df.empty
+    conn.close()
