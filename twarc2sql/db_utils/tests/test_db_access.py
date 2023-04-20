@@ -12,6 +12,7 @@ root directory of the project:
 import os
 from typing import Dict
 
+import pandas as pd
 import pytest
 import sqlalchemy as sa
 import sqlalchemy_utils as sau
@@ -106,6 +107,26 @@ def test_create_db(config_file_path):
     engine.dispose()
 
 
+def test_get_engine(config_file_path):
+    """
+    Test that the get_engine function returns an engine.
+
+    The engine should be a sqlalchemy.engine.base.Engine object.
+    """
+    with pytest.raises(db_access.DatabaseException, match="database does not exist"):
+        engine = db_access.get_engine(config_file_path)
+    # create the database:
+    engine = db_access.create_db(config_file_path)
+    assert sau.database_exists(engine.url)
+    engine = db_access.get_engine(config_file_path)
+    # check that the database exists without tables:
+    assert isinstance(engine, sa.engine.base.Engine)
+    # make sure that the database is deleted:
+    assert db_access.delete_db(config_file_path)
+    # check that the database does not exist:
+    engine.dispose()
+
+
 def test_create_tables(engine, base_tables, tables_and_columns):
     """
     Test that the create_tables function returns True.
@@ -116,10 +137,28 @@ def test_create_tables(engine, base_tables, tables_and_columns):
     db_access.create_tables(engine=engine, base=base_tables)
     # check that the tables exist:
     assert sau.database_exists(engine.url)
-    # check that the tables exist:
     # Use pandas to check that the tables exist:
-    import pandas as pd
+    conn = engine.connect()
 
+    for table in tables_and_columns.keys():
+        df = pd.read_sql_table(table, conn)
+        assert set(df.columns.tolist()) == set(tables_and_columns[table])
+        assert df.empty
+    conn.close()
+
+
+def test_create_db_with_tables(config_file_path, tables_and_columns):
+    """
+    Test that the create_db_with_tables function returns an engine.
+
+    The engine should be a sqlalchemy.engine.base.Engine object.
+    """
+    assert db_access.delete_db(config_file_path)
+    engine = db_access.create_db_with_tables(config_file_path)
+    assert sau.database_exists(engine.url)
+    # check that the tables exist:
+    assert isinstance(engine, sa.engine.base.Engine)
+    # Use pandas to check that the tables exist:
     conn = engine.connect()
 
     for table in tables_and_columns.keys():
