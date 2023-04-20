@@ -68,19 +68,28 @@ def test_load_db_config_missing_file():
     #     db_access.load_db_config()
 
 
+def test_delete_db(config_file_path):
+    """
+    Test that the delete_db function returns True.
+
+    The function should return True if the database is deleted.
+    """
+    assert db_access.delete_db(config_file_path)
+
+
 def test_create_db(config_file_path):
     """
     Test that the create_engine function returns an engine.
 
     The engine should be a sqlalchemy.engine.base.Engine object.
     """
-    assert db_access.delete_db(config_file_path)
     engine = db_access.create_db(config_file_path)
     assert sau.database_exists(engine.url)
     # check that the database exists without tables:
     assert isinstance(engine, sa.engine.base.Engine)
     with pytest.raises(db_access.DatabaseException, match="database already exists"):
         db_access.create_db(config_file_path)
+    # make sure that the database is deleted:
     assert db_access.delete_db(config_file_path)
     # check that the database does not exist:
     engine.dispose()
