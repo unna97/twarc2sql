@@ -25,11 +25,7 @@ jobs:
                   pip install
                   build
                   --user
-            - name: Bump version
-              id: bump_version
-              run: |
-                  pip install bump2version
-                  bump2version ${{ github.event.inputs.version }}
+
             - name: Build a binary wheel and a source tarball
               run: >-
                   python -m
@@ -54,4 +50,4 @@ jobs:
               with:
                   artifacts: "release.tar.gz,twarc2sql/*.txt"
                   bodyFile: "body.md"
-                  name: "Release ${{ steps.bump_version.outputs.new_version }}"
+                  name: "Release ${{ github.ref_name }}"
