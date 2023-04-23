@@ -44,8 +44,8 @@ jobs:
               with:
                   password: ${{ secrets.PYPI_SECRET_TOKEN }}
 
-            - uses: ncipollo/release-action@v1
-              with:
-                  artifacts: "release.tar.gz,twarc2sql/*.txt"
-                  bodyFile: "body.md"
-                  name: "Release ${{ github.ref_name }}"
+            # - uses: ncipollo/release-action@v1
+            #   with:
+            #       artifacts: "release.tar.gz,twarc2sql/*.txt"
+            #       bodyFile: "body.md"
+            #       name: "Release ${{ github.ref_name }}"
