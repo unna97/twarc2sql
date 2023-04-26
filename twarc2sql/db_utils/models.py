@@ -68,6 +68,14 @@ class Tweet(Base):
 
     author = relationship("Author", back_populates="tweets")
 
+    @property
+    def clean_text(self):
+        """
+        Remove newlines from the tweet text.
+        """
+        if self.text:
+            self.text = self.text.replace("\x00", "\uFFFD")
+
 
 class Author(Base):
     __tablename__ = "author"
@@ -96,3 +104,11 @@ class Author(Base):
     )
     tweet_count = Column(Integer, doc="The number of tweets of the author")
     listed_count = Column(Integer, doc="The number of lists the author is in")
+
+    @property
+    def clean_text(self):
+        """
+        Remove newlines from the tweet text.
+        """
+        if self.description:
+            self.description = self.description.replace("\x00", "\uFFFD")
