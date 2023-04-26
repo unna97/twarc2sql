@@ -68,7 +68,61 @@ def validate_object(object: pd.DataFrame, object_type: str):
     ), f"{object_type} columns must be {object_columns[object_type]}"
 
 
-def tweet_object(tweet_object: pd.DataFrame, tables: Dict[str, pd.DataFrame]):
+def refrenced_tweet_column_processing(
+    tweet_object: pd.DataFrame, tables: Dict[str, List[pd.DataFrame]]
+):
+    """
+    refrenced_tweet_column_processing.
+
+    Parameters
+    ----------
+    tweet_object : pd.DataFrame
+        The raw tweet object to be processed
+    tables : Dict[str, List[pd.DataFrame]]
+       The tables to upload to the database
+
+    Returns
+    -------
+    tables : Dict[str, List[pd.DataFrame]]
+         The tables to upload to the database with the refrenced tweets added
+    """
+    columns = ["id", "in_reply_to_user_id", "referenced_tweets"]
+    referenced_tweets = tweet_object[columns]
+    referenced_tweets = referenced_tweets.explode("referenced_tweets")
+    referenced_tweets.dropna(subset=["referenced_tweets"], inplace=True)
+    referenced_tweets.reset_index(drop=True, inplace=True)
+
+    referenced_tweets.rename({"id": "actual_id"}, axis=1, inplace=True)
+
+    expand_dict_column(referenced_tweets, "referenced_tweets", ["id", "type"])
+
+    referenced_tweets.rename(
+        {"id": "tweet_id", "actual_id": "id"}, axis=1, inplace=True
+    )
+
+    # TODO: fetch below from init
+    columns_for_each = {
+        "quoted": ["tweet_id", "id"],
+        "retweeted": ["tweet_id", "id"],
+        "replied_to": [
+            "tweet_id",
+            "id",
+            "in_reply_to_user_id",
+        ],
+    }
+
+    for key, columns_for_table in columns_for_each.items():
+        table_name = key + "_tweet_mapping"
+        tables[table_name].append(
+            referenced_tweets[referenced_tweets["type"] == key][columns_for_table]
+        )
+
+    return tables
+
+
+def tweet_object_to_table(
+    tweet_object: pd.DataFrame, tables: Dict[str, pd.DataFrame]
+) -> Dict[str, pd.DataFrame]:
     """
     Process a tweet object and add it to the tables.
 
@@ -87,6 +141,8 @@ def tweet_object(tweet_object: pd.DataFrame, tables: Dict[str, pd.DataFrame]):
     """
     # validate_object(tweet_object, "tweet_object")
 
+    refrenced_tweet_column_processing(tweet_object, tables)
+
     tweet_object = expand_dict_column(tweet_object, "public_metrics")
     tweet_object = expand_dict_column(tweet_object, "edit_controls")
 
@@ -99,7 +155,7 @@ def tweet_object(tweet_object: pd.DataFrame, tables: Dict[str, pd.DataFrame]):
     return tables
 
 
-def user_object(user_object: pd.DataFrame, tables: Dict[str, pd.DataFrame]):
+def user_object_to_table(user_object: pd.DataFrame, tables: Dict[str, pd.DataFrame]):
     """
     Process a user object and add it to the tables.
 
