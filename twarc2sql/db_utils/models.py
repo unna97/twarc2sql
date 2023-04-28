@@ -68,6 +68,14 @@ class Tweet(Base):
 
     author = relationship("Author", back_populates="tweets")
 
+    @property
+    def clean_text(self):
+        """
+        Remove newlines from the tweet text.
+        """
+        if self.text:
+            self.text = self.text.replace("\x00", "\uFFFD")
+
 
 class Author(Base):
     __tablename__ = "author"
@@ -96,3 +104,76 @@ class Author(Base):
     )
     tweet_count = Column(Integer, doc="The number of tweets of the author")
     listed_count = Column(Integer, doc="The number of lists the author is in")
+
+    @property
+    def clean_text(self):
+        """
+        Remove newlines from the tweet text.
+        """
+        if self.description:
+            self.description = self.description.replace("\x00", "\uFFFD")
+
+
+class Retweet_Tweet_Mapping(Base):
+    __tablename__ = "retweeted_tweet_mapping"
+
+    id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        primary_key=True,
+        doc="The unique identifier of the retweet",
+        onupdate="CASCADE",
+    )
+
+    tweet_id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        doc="The unique identifier of the tweet being retweeted",
+    )
+
+
+class Quoted_Tweet_Mapping(Base):
+    __tablename__ = "quoted_tweet_mapping"
+
+    id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        primary_key=True,
+        doc="The unique identifier of the quote",
+    )
+
+    tweet_id = Column(
+        String(256),
+        # ForeignKey("tweet.id"), contains deleted tweets
+        nullable=False,
+        doc="The unique identifier of the tweet being quoted",
+    )
+
+
+class Replied_Tweet_Mapping(Base):
+    __tablename__ = "replied_to_tweet_mapping"
+
+    id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        primary_key=True,
+        doc="The unique identifier of the reply",
+    )
+
+    tweet_id = Column(
+        String(256),
+        # ForeignKey("tweet.id"), # contains deleted tweets
+        nullable=False,
+        doc="The unique identifier of the tweet being replied to",
+    )
+
+    in_reply_to_user_id = Column(
+        String(256),
+        # ForeignKey("author.id"), #contains deleted/suspended users
+        nullable=False,
+        doc="The unique identifier of the user being replied to",
+    )

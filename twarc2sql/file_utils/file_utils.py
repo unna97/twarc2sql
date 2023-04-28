@@ -9,9 +9,20 @@ from twarc2sql.db_utils.db_access import create_db_with_tables, get_engine
 
 from . import objects
 from .file_to_object import get_object_for_search
-from .object_to_table import tweet_object, user_object
+from .object_to_table import tweet_object_to_table, user_object_to_table
 
-table_priority = ["meta", "author", "tweet", "media", "places", "polls", "errors"]
+table_priority = [
+    "meta",
+    "author",
+    "tweet",
+    "retweeted_tweet_mapping",
+    "quoted_tweet_mapping",
+    "replied_to_tweet_mapping",
+    "media",
+    "places",
+    "polls",
+    "errors",
+]
 
 
 def upload_to_database(tables: Dict[str, pd.DataFrame], engine: Any) -> None:
@@ -30,6 +41,7 @@ def upload_to_database(tables: Dict[str, pd.DataFrame], engine: Any) -> None:
         current_table = tables[table]
         if len(current_table) > 0:
             current_table = pd.concat(current_table)
+            current_table = current_table.drop_duplicates()
             print(f"Uploading {len(current_table)} rows to {table}")
 
             current_table.to_sql(
@@ -76,21 +88,33 @@ def read_and_upload_file(
     """
     # read the file in chunks:
     file_path: str = folder_path + file_name
-    chunks = pd.read_json(file_path, lines=True, chunksize=1000)
+    chunksize = 100
+    chunks = pd.read_json(file_path, lines=True, chunksize=chunksize)
 
     task_types = {"search": get_object_for_search}
-    # create empty tables:
-    tables = {table: [] for table in table_priority}
+
+    # Number of lines in the file:
+    num_lines = sum(1 for line in open(file_path))
+    num_chunks = num_lines / chunksize
+    i = 0
 
     for chunk in chunks:
+        print(f"Processing chunk {i} of {num_chunks}")
+        i += 1
+        # create empty tables for each chunk:
+        tables = {table: [] for table in table_priority}
         # get objects from chunk:
-        objects = task_types[task_type](chunk, objects)
+        current_objects = {key: [] for key in objects.keys()}
+        current_objects = task_types[task_type](chunk, current_objects)
         # TODO:Object processing is task specific i.e diff for tasks
         # convert objects to tables:
-        tables = tweet_object(pd.concat(objects["tweets_object"]), tables)
-        tables = user_object(pd.concat(objects["users_object"]), tables)
+        current_objects["tweets_object"] = pd.concat(current_objects["tweets_object"])
+        tables = tweet_object_to_table(current_objects["tweets_object"], tables)
+        current_objects["users_object"] = pd.concat(current_objects["users_object"])
+        tables = user_object_to_table(current_objects["users_object"], tables)
         # upload tables to database:
         upload_to_database(tables, engine)
+
     return tables
 
 
@@ -141,7 +165,6 @@ def connect_to_db_and_upload(
     """
     try:
         engine = get_engine(config_file_path)
-    # catch exception if database does not exist:
     except Exception as e:
         print(e)
         print("Creating database")
