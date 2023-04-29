@@ -110,12 +110,19 @@ def refrenced_tweet_column_processing(
             "in_reply_to_user_id",
         ],
     }
-
+    tweet_type = {
+        "quoted": 1,
+        "retweeted": 2,
+        "replied_to": 3,
+    }
     for key, columns_for_table in columns_for_each.items():
         table_name = key + "_tweet_mapping"
         tables[table_name].append(
             referenced_tweets[referenced_tweets["type"] == key][columns_for_table]
         )
+        tweet_object.loc[
+            tweet_object["id"].isin(pd.concat(tables[table_name])["id"]), "tweet_type"
+        ] += tweet_type[key]
 
     return tables
 
@@ -140,14 +147,13 @@ def tweet_object_to_table(
         tables that have been updated with the tweet_object
     """
     # validate_object(tweet_object, "tweet_object")
-
+    tweet_object["tweet_type"] = 0
     refrenced_tweet_column_processing(tweet_object, tables)
 
     tweet_object = expand_dict_column(tweet_object, "public_metrics")
     tweet_object = expand_dict_column(tweet_object, "edit_controls")
 
     # TODO: Add processing for referenced tweets and assign tweet_type
-    tweet_object["tweet_type"] = 0
 
     columns_for_tweet_table = table_columns["tweet"]
     tables["tweet"].append(tweet_object[columns_for_tweet_table])
