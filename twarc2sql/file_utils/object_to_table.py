@@ -68,11 +68,11 @@ def validate_object(object: pd.DataFrame, object_type: str):
     ), f"{object_type} columns must be {object_columns[object_type]}"
 
 
-def refrenced_tweet_column_processing(
+def referenced_tweet_column_processing(
     tweet_object: pd.DataFrame, tables: Dict[str, List[pd.DataFrame]]
 ):
     """
-    refrenced_tweet_column_processing.
+    referenced_tweet_column_processing.
 
     Parameters
     ----------
@@ -148,7 +148,7 @@ def tweet_object_to_table(
     """
     # validate_object(tweet_object, "tweet_object")
     tweet_object["tweet_type"] = 0
-    refrenced_tweet_column_processing(tweet_object, tables)
+    referenced_tweet_column_processing(tweet_object, tables)
 
     tweet_object = expand_dict_column(tweet_object, "public_metrics")
     tweet_object = expand_dict_column(tweet_object, "edit_controls")
