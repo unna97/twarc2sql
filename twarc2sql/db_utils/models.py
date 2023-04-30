@@ -6,7 +6,16 @@ to make it easier to query the database.
 """
 
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    Float,
+)
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -176,4 +185,226 @@ class Replied_Tweet_Mapping(Base):
         # ForeignKey("author.id"), #contains deleted/suspended users
         nullable=False,
         doc="The unique identifier of the user being replied to",
+    )
+
+
+class Hastag_Tweet_Mapping(Base):
+    __tablename__ = "hashtags_tweet_mapping"
+
+    # AutoIncrement Id:
+    id = Column(
+        Integer,
+        primary_key=True,
+        nullable=False,
+        unique=True,
+        autoincrement=True,
+        doc="The unique identifier of the hastag",
+    )
+
+    tweet_id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        doc="The unique identifier of the tweet",
+        onupdate="CASCADE",
+    )
+
+    tag = Column(
+        String(256),
+        nullable=False,
+        doc="hashtag in the tweet",
+    )
+    start = Column(
+        Integer,
+        nullable=False,
+        doc="start index of the hashtag in the tweet",
+    )
+    end = Column(
+        Integer,
+        nullable=False,
+        doc="end index of the hashtag in the tweet",
+    )
+
+
+class Castag_Tweet_Mapping(Base):
+    __tablename__ = "cashtags_tweet_mapping"
+
+    # AutoIncrement Id:
+    id = Column(
+        Integer,
+        primary_key=True,
+        nullable=False,
+        unique=True,
+        autoincrement=True,
+        doc="The unique identifier of the castag",
+    )
+
+    tweet_id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        doc="The unique identifier of the tweet",
+        onupdate="CASCADE",
+    )
+
+    tag = Column(
+        String(256),
+        nullable=False,
+        doc="cashtag in the tweet",
+    )
+    start = Column(
+        Integer,
+        nullable=False,
+        doc="start index of the cashtag in the tweet",
+    )
+    end = Column(
+        Integer,
+        nullable=False,
+        doc="end index of the cashtag in the tweet",
+    )
+
+
+class Url_Tweet_Mapping(Base):
+    __tablename__ = "urls_tweet_mapping"
+
+    # AutoIncrement Id:
+    id = Column(
+        Integer,
+        primary_key=True,
+        nullable=False,
+        unique=True,
+        autoincrement=True,
+        doc="The unique identifier of the url",
+    )
+
+    tweet_id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        doc="The unique identifier of the tweet",
+        onupdate="CASCADE",
+    )
+
+    url = Column(
+        String(256),
+        nullable=False,
+        doc="url in the tweet",
+    )
+    start = Column(
+        Integer,
+        nullable=False,
+        doc="start index of the url in the tweet",
+    )
+    end = Column(
+        Integer,
+        nullable=False,
+        doc="end index of the url in the tweet",
+    )
+    expanded_url = Column(
+        String,
+        nullable=False,
+        doc="expanded url in the tweet",
+    )
+    display_url = Column(
+        String(512),
+        nullable=False,
+        doc="display url in the tweet",
+    )
+    media_key = Column(
+        String(512),
+        nullable=True,
+        doc="media key in the tweet",
+    )
+
+
+class Mention_Tweet_Mapping(Base):
+    __tablename__ = "mentions_tweet_mapping"
+
+    # AutoIncrement Id:
+    id = Column(
+        Integer,
+        primary_key=True,
+        nullable=False,
+        unique=True,
+        autoincrement=True,
+        doc="The unique identifier of the mention",
+    )
+
+    tweet_id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        doc="The unique identifier of the tweet",
+        onupdate="CASCADE",
+    )
+
+    username = Column(
+        String(256),
+        nullable=False,
+        doc="username in the tweet",
+    )
+    start = Column(
+        Integer,
+        nullable=False,
+        doc="start index of the username in the tweet",
+    )
+    end = Column(
+        Integer,
+        nullable=False,
+        doc="end index of the username in the tweet",
+    )
+    author_id = Column(
+        String(256),
+        # ForeignKey("author.id"),
+        nullable=False,
+        doc="id of the user mentioned in the tweet",
+    )
+
+
+class Annonation_Tweet_Mapping(Base):
+    __tablename__ = "annotations_tweet_mapping"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        nullable=False,
+        unique=True,
+        autoincrement=True,
+        doc="The unique identifier of the annotation",
+    )
+
+    tweet_id = Column(
+        String(256),
+        ForeignKey("tweet.id"),
+        nullable=False,
+        doc="The unique identifier of the tweet",
+        onupdate="CASCADE",
+    )
+
+    start = Column(
+        Integer,
+        nullable=False,
+        doc="start index of the annotation in the tweet",
+    )
+    end = Column(
+        Integer,
+        nullable=False,
+        doc="end index of the annotation in the tweet",
+    )
+    probability = Column(
+        Float,
+        nullable=False,
+        doc="probability of the annotation in the tweet",
+    )
+
+    type = Column(
+        String(256),
+        nullable=False,
+        doc="type of the annotation in the tweet",
+    )
+
+    normalized_text = Column(
+        String(256),
+        nullable=False,
+        doc="normalized text of the annotation in the tweet",
     )
