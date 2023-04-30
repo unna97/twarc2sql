@@ -68,11 +68,11 @@ def validate_object(object: pd.DataFrame, object_type: str):
     ), f"{object_type} columns must be {object_columns[object_type]}"
 
 
-def refrenced_tweet_column_processing(
+def referenced_tweet_column_processing(
     tweet_object: pd.DataFrame, tables: Dict[str, List[pd.DataFrame]]
 ):
     """
-    refrenced_tweet_column_processing.
+    referenced_tweet_column_processing.
 
     Parameters
     ----------
@@ -127,6 +127,42 @@ def refrenced_tweet_column_processing(
     return tables
 
 
+def entity_column_processing(
+    object: pd.DataFrame, tables: Dict[str, List[pd.DataFrame]]
+):
+    """
+    entity_column_processing.
+
+    Parameters
+    ----------
+    object : pd.DataFrame
+        The raw object with the entities column to be processed
+    tables : Dict[str, List[pd.DataFrame]]
+        The tables to upload to the database
+    Returns
+    -------
+    tables : Dict[str, List[pd.DataFrame]]
+        The tables to upload to the database with the entities added
+    """
+    entities = ["mentions", "urls", "hashtags", "annotations", "cashtags"]
+    object = object[["entities", "id"]].dropna().copy()
+    for entity in entities:
+        object[entity] = object.apply(lambda x: x["entities"].get(entity), axis=1)
+
+    for entity in entities:
+        current_table = object[["id", entity]].explode(entity)
+        current_table.rename({"id": "tweet_id"}, axis=1, inplace=True)
+        current_table.dropna(subset=[entity], inplace=True)
+        current_table.reset_index(drop=True, inplace=True)
+        if not current_table.empty:
+            expand_dict_column(current_table, entity)
+            if entity == "mentions":
+                current_table.rename({"id": "author_id"}, axis=1, inplace=True)
+            current_table = current_table[table_columns[entity + "_tweet_mapping"]]
+        tables[entity + "_tweet_mapping"].append(current_table)
+    return tables
+
+
 def tweet_object_to_table(
     tweet_object: pd.DataFrame, tables: Dict[str, pd.DataFrame]
 ) -> Dict[str, pd.DataFrame]:
@@ -148,12 +184,13 @@ def tweet_object_to_table(
     """
     # validate_object(tweet_object, "tweet_object")
     tweet_object["tweet_type"] = 0
-    refrenced_tweet_column_processing(tweet_object, tables)
+    referenced_tweet_column_processing(tweet_object, tables)
 
     tweet_object = expand_dict_column(tweet_object, "public_metrics")
     tweet_object = expand_dict_column(tweet_object, "edit_controls")
 
     # TODO: Add processing for referenced tweets and assign tweet_type
+    entity_column_processing(tweet_object, tables)
 
     columns_for_tweet_table = table_columns["tweet"]
     tables["tweet"].append(tweet_object[columns_for_tweet_table])
