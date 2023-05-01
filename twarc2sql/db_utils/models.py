@@ -18,6 +18,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy.schema import UniqueConstraint
 
 Base = declarative_base()
 
@@ -192,6 +193,8 @@ class Replied_Tweet_Mapping(Base):
 class Hastag_Tweet_Mapping(Base):
     __tablename__ = "hashtags_tweet_mapping"
 
+    table_args = (UniqueConstraint("tweet_id", "start", name="unique_hashtag_tweet"),)
+
     # AutoIncrement Id:
     id = Column(
         Integer,
@@ -230,6 +233,8 @@ class Hastag_Tweet_Mapping(Base):
 class Castag_Tweet_Mapping(Base):
     __tablename__ = "cashtags_tweet_mapping"
 
+    table_args = (UniqueConstraint("tweet_id", "start", name="unique_cashtag_tweet"),)
+
     # AutoIncrement Id:
     id = Column(
         Integer,
@@ -267,6 +272,8 @@ class Castag_Tweet_Mapping(Base):
 
 class Url_Tweet_Mapping(Base):
     __tablename__ = "urls_tweet_mapping"
+
+    table_args = (UniqueConstraint("tweet_id", "start", name="unique_url_tweet"),)
 
     # AutoIncrement Id:
     id = Column(
@@ -321,6 +328,8 @@ class Url_Tweet_Mapping(Base):
 class Mention_Tweet_Mapping(Base):
     __tablename__ = "mentions_tweet_mapping"
 
+    table_args = (UniqueConstraint("tweet_id", "start", name="unique_mention_tweet"),)
+
     # AutoIncrement Id:
     id = Column(
         Integer,
@@ -364,6 +373,10 @@ class Mention_Tweet_Mapping(Base):
 
 class Annonation_Tweet_Mapping(Base):
     __tablename__ = "annotations_tweet_mapping"
+
+    table_args = (
+        UniqueConstraint("tweet_id", "start", name="unique_annotation_tweet"),
+    )
 
     id = Column(
         Integer,
