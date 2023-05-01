@@ -103,9 +103,9 @@ def tables_and_columns() -> dict:
             "like_count",
             "quote_count",
             "impression_count",
-            "edits_remaining",
-            "is_edit_eligible",
-            "editable_until",
+            # "edits_remaining",
+            # "is_edit_eligible",
+            # "editable_until",
         ],
         "author": [
             "id",
