@@ -4,6 +4,14 @@ twarc2sql.db\_utils.tests package
 Submodules
 ----------
 
+twarc2sql.db\_utils.tests.conftest module
+-----------------------------------------
+
+.. automodule:: twarc2sql.db_utils.tests.conftest
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 twarc2sql.db\_utils.tests.test\_db\_access module
 -------------------------------------------------
 

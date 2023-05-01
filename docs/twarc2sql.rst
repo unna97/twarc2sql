@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    twarc2sql.db_utils
+   twarc2sql.file_utils
 
 Submodules
 ----------
