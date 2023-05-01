@@ -69,11 +69,12 @@ class Tweet(Base):
     like_count = Column(Integer, doc="The number of times the tweet was liked")
     quote_count = Column(Integer, doc="The number of times the tweet was quoted")
     impression_count = Column(Integer, doc="The number of times the tweet was viewed")
-    edits_remaining = Column(Integer, doc="The number of times the tweet can be edited")
-    is_edit_eligible = Column(Boolean, doc="Whether the tweet can be edited")
-    editable_until = Column(
-        DateTime, doc="The date and time when the tweet can no longer be edited"
-    )
+    # edits_remaining = Column(Integer,
+    # doc="The number of times the tweet can be edited")
+    # is_edit_eligible = Column(Boolean, doc="Whether the tweet can be edited")
+    # editable_until = Column(
+    #     DateTime, doc="The date and time when the tweet can no longer be edited"
+    # )
 
     author = relationship("Author", back_populates="tweets")
 

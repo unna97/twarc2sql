@@ -187,7 +187,7 @@ def tweet_object_to_table(
     referenced_tweet_column_processing(tweet_object, tables)
 
     tweet_object = expand_dict_column(tweet_object, "public_metrics")
-    tweet_object = expand_dict_column(tweet_object, "edit_controls")
+    # tweet_object = expand_dict_column(tweet_object, "edit_controls")
 
     # TODO: Add processing for referenced tweets and assign tweet_type
     entity_column_processing(tweet_object, tables)
