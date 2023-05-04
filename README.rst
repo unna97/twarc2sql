@@ -47,6 +47,15 @@ Usage
             "env_file_with_db_information",
         )
 
+Example of env file:
+--------------------
+.. code-block:: console
+
+    DB_NAME=postgres
+    DB_USER=postgres
+    DB_PASSWORD=postgres
+    DB_HOST=localhost
+    DB_PORT=5432
 
 Credits
 -------
