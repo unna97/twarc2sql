@@ -190,7 +190,7 @@ class Replied_Tweet_Mapping(Base):
     )
 
 
-class Hastag_Tweet_Mapping(Base):
+class Hashtag_Tweet_Mapping(Base):
     __tablename__ = "hashtags_tweet_mapping"
 
     table_args = (UniqueConstraint("tweet_id", "start", name="unique_hashtag_tweet"),)
@@ -230,7 +230,7 @@ class Hastag_Tweet_Mapping(Base):
     )
 
 
-class Castag_Tweet_Mapping(Base):
+class Cashtag_Tweet_Mapping(Base):
     __tablename__ = "cashtags_tweet_mapping"
 
     table_args = (UniqueConstraint("tweet_id", "start", name="unique_cashtag_tweet"),)
