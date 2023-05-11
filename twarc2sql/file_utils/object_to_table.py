@@ -128,7 +128,9 @@ def referenced_tweet_column_processing(
 
 
 def entity_column_processing(
-    object: pd.DataFrame, tables: Dict[str, List[pd.DataFrame]]
+    object: pd.DataFrame,
+    tables: Dict[str, List[pd.DataFrame]],
+    table_type: str = "tweet",
 ):
     """
     entity_column_processing.
@@ -151,15 +153,17 @@ def entity_column_processing(
 
     for entity in entities:
         current_table = object[["id", entity]].explode(entity)
-        current_table.rename({"id": "tweet_id"}, axis=1, inplace=True)
+        current_table.rename({"id": f"{table_type}_id"}, axis=1, inplace=True)
         current_table.dropna(subset=[entity], inplace=True)
         current_table.reset_index(drop=True, inplace=True)
         if not current_table.empty:
             expand_dict_column(current_table, entity)
             if entity == "mentions":
                 current_table.rename({"id": "author_id"}, axis=1, inplace=True)
-            current_table = current_table[table_columns[entity + "_tweet_mapping"]]
-        tables[entity + "_tweet_mapping"].append(current_table)
+            current_table = current_table[
+                table_columns[entity + f"_{table_type}_mapping"]
+            ]
+        tables[entity + f"_{table_type}_mapping"].append(current_table)
     return tables
 
 
