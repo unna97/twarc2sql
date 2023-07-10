@@ -139,6 +139,7 @@ def entity_column_processing(
         The raw object with the entities column to be processed
     tables : Dict[str, List[pd.DataFrame]]
         The tables to upload to the database
+
     Returns
     -------
     tables : Dict[str, List[pd.DataFrame]]
@@ -177,6 +178,7 @@ def tweet_object_to_table(
         the tweet object from chunk
     tables : Dict[str, pd.DataFrame]
         all tables that have been created
+
     Returns
     -------
     tables : Dict[str, pd.DataFrame]
@@ -208,6 +210,7 @@ def user_object_to_table(user_object: pd.DataFrame, tables: Dict[str, pd.DataFra
         the user object from chunk
     tables : Dict[str, pd.DataFrame]
         all tables that have been created
+
     Returns
     -------
     tables : Dict[str, pd.DataFrame]
