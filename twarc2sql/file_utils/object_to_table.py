@@ -1,4 +1,5 @@
 """Functions to process objects from the twitter API and convert them to tables."""
+
 from typing import Dict, List, Optional
 
 import pandas as pd
