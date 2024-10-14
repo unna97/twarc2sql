@@ -1,4 +1,5 @@
 """Module for file utilities for twarc2sql."""
+
 objects = {
     "tweets_object": [],
     "users_object": [],
