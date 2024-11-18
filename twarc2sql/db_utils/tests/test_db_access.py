@@ -8,7 +8,6 @@ root directory of the project:
 
 """
 
-
 import os
 from typing import Dict
 

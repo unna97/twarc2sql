@@ -5,7 +5,6 @@ It is an opnionated normalization of the Tweet object
 to make it easier to query the database.
 """
 
-
 from sqlalchemy import (
     Boolean,
     Column,

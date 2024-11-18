@@ -5,6 +5,7 @@ Module contains functions for creating and deleting databases & their
 tables as defined in models.py.
 
 """
+
 import logging
 import os
 from typing import Any, Dict, List, Optional
