@@ -1,7 +1,7 @@
 """
 The SQLAlchemy models for creating the database tables.
-The models are based on the Twitter API v2 Tweet object. 
-It is an opnionated normalization of the Tweet object 
+The models are based on the Twitter API v2 Tweet object.
+It is an opnionated normalization of the Tweet object
 to make it easier to query the database.
 """
 
@@ -84,7 +84,7 @@ class Tweet(Base):
         Remove newlines from the tweet text.
         """
         if self.text:
-            self.text = self.text.replace("\x00", "\uFFFD")
+            self.text = self.text.replace("\x00", "\ufffd")
 
 
 class Author(Base):
@@ -121,7 +121,7 @@ class Author(Base):
         Remove newlines from the tweet text.
         """
         if self.description:
-            self.description = self.description.replace("\x00", "\uFFFD")
+            self.description = self.description.replace("\x00", "\ufffd")
 
 
 class Retweet_Tweet_Mapping(Base):
