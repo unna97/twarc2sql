@@ -1,7 +1,7 @@
 """
 Tests for the db_access module.
 
-The tests are run using pytest. To run the tests, use the following command from the 
+The tests are run using pytest. To run the tests, use the following command from the
 root directory of the project:
 
     pytest twarc2sql/db_utils/tests/test_db_access.py
