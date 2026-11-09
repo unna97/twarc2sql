@@ -2,7 +2,6 @@
 
 """Tests for `twarc2sql` package."""
 
-
 import pandas as pd
 import pytest
 
