@@ -1,6 +1,6 @@
 """file_to_object.py convert a file to objects to be processed.
 
-This module contains functions to convert a file to objects to 
+This module contains functions to convert a file to objects to
 be processed for each endpoint.
 """
 

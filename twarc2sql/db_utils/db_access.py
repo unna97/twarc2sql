@@ -1,7 +1,7 @@
 """
 Module for accessing the database.
 
-Module contains functions for creating and deleting databases & their 
+Module contains functions for creating and deleting databases & their
 tables as defined in models.py.
 
 """
