@@ -25,7 +25,7 @@ def config_file_path() -> str:
 @pytest.fixture(scope="module")
 def uri(config_file_path):
     """
-    uri _summary_.
+    Uri _summary_.
 
     returns a URI
     """
@@ -43,7 +43,7 @@ def uri(config_file_path):
 @pytest.fixture(scope="module")
 def engine(config_file_path) -> sa.engine.base.Engine:
     """
-    engine _summary_.
+    Engine _summary_.
 
     returns a sqlalchemy engine
 
